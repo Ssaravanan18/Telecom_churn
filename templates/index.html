@@ -1,0 +1,673 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Car Purchase Prediction</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
+            color: white;
+            background:
+                linear-gradient(rgba(5, 5, 7, 0.82), rgba(5, 5, 7, 0.96)),
+                radial-gradient(circle at 80% 20%, rgba(255, 30, 30, 0.18), transparent 35%),
+                #050507;
+            overflow-x: hidden;
+        }
+
+        /* Animated background lights */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255, 35, 35, 0.08);
+            filter: blur(100px);
+            top: -150px;
+            right: -100px;
+            animation: glow 5s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(255, 35, 35, 0.05);
+            filter: blur(100px);
+            bottom: -200px;
+            left: -150px;
+            pointer-events: none;
+        }
+
+        @keyframes glow {
+            from {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            to {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+        }
+
+        /* Main container */
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 55px 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .hero {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .car-icon {
+            font-size: 58px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 15px rgba(255, 40, 40, 0.7));
+            animation: carMove 2.5s ease-in-out infinite;
+        }
+
+        @keyframes carMove {
+            0%, 100% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(38px, 6vw, 72px);
+            font-weight: 900;
+            letter-spacing: -3px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .hero h1 span {
+            color: #ff3b3b;
+            text-shadow: 0 0 25px rgba(255, 40, 40, 0.45);
+        }
+
+        .subtitle {
+            margin-top: 18px;
+            color: #b8b8bd;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .subtitle strong {
+            color: #ff4141;
+        }
+
+        .speed-line {
+            width: 100px;
+            height: 4px;
+            margin: 22px auto 0;
+            background: #ff3535;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.8);
+        }
+
+        /* Form card */
+        .prediction-card {
+            max-width: 680px;
+            margin: auto;
+            padding: 38px;
+            border: 1px solid rgba(255, 55, 55, 0.65);
+            border-radius: 24px;
+            background: rgba(20, 20, 23, 0.82);
+            backdrop-filter: blur(18px);
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.55),
+                0 0 35px rgba(255, 30, 30, 0.08);
+        }
+
+        .card-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .card-title h2 {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .card-title p {
+            margin-top: 8px;
+            color: #85858b;
+            font-size: 14px;
+        }
+
+        .title-line {
+            width: 55px;
+            height: 3px;
+            background: #ff3636;
+            margin: 14px auto 0;
+            border-radius: 10px;
+        }
+
+        /* Input groups */
+        .input-group {
+            margin-bottom: 23px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #eeeeee;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            z-index: 2;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 56px;
+            border-radius: 12px;
+            border: 1px solid #3b3b40;
+            background: #121215;
+            color: white;
+            padding: 0 18px 0 48px;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input::placeholder {
+            color: #68686e;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ff3838;
+            box-shadow: 0 0 0 3px rgba(255, 50, 50, 0.10);
+        }
+
+        /* Predict button */
+        .predict-btn {
+            width: 100%;
+            height: 58px;
+            border: none;
+            border-radius: 12px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #ff3c3c, #c90000);
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 35, 35, 0.22);
+        }
+
+        .predict-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.25),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: 0.5s;
+        }
+
+        .predict-btn:hover::before {
+            left: 130%;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 30, 30, 0.38);
+        }
+
+        .predict-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Result */
+        .result-card {
+            max-width: 900px;
+            margin: 35px auto 0;
+            padding: 30px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 55, 55, 0.5);
+            background: rgba(18, 18, 21, 0.85);
+            backdrop-filter: blur(15px);
+            text-align: center;
+        }
+
+        .result-heading {
+            font-size: 14px;
+            color: #99999f;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .result-value {
+            margin-top: 12px;
+            font-size: clamp(27px, 5vw, 45px);
+            font-weight: 900;
+            color: #ff4141;
+            text-shadow: 0 0 25px rgba(255, 40, 40, 0.35);
+        }
+
+        .result-message {
+            margin-top: 8px;
+            color: #a5a5ab;
+            font-size: 14px;
+        }
+
+        /* Feature cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .feature {
+            padding: 25px 15px;
+            text-align: center;
+            background: rgba(22, 22, 25, 0.75);
+            border: 1px solid #29292e;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 55, 55, 0.55);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .feature h3 {
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .feature p {
+            font-size: 11px;
+            color: #77777d;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 45px;
+            padding-top: 22px;
+            border-top: 1px solid #242428;
+            color: #66666c;
+            font-size: 12px;
+        }
+
+        footer span {
+            color: #ff4141;
+        }
+
+        /* Racing stripes */
+        .racing-stripes {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 250px;
+            height: 100px;
+            opacity: 0.08;
+            transform: skewX(-30deg);
+            background: repeating-linear-gradient(
+                90deg,
+                white 0px,
+                white 18px,
+                transparent 18px,
+                transparent 35px
+            );
+            pointer-events: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .prediction-card {
+                padding: 28px 22px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .container {
+                width: 94%;
+                padding-top: 35px;
+            }
+
+            .features {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .feature {
+                padding: 20px 10px;
+            }
+
+            .prediction-card {
+                padding: 25px 18px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+
+        <div class="car-icon">🏎️</div>
+
+        <h1>
+            CAR <span>PURCHASE</span>
+        </h1>
+
+        <div class="speed-line"></div>
+
+        <p class="subtitle">
+            Intelligent machine learning prediction for
+            <strong>car purchase decisions</strong>
+        </p>
+
+    </section>
+
+
+    <!-- PREDICTION FORM -->
+    <div class="prediction-card">
+
+        <div class="card-title">
+
+            <h2>🚘 Customer Information</h2>
+
+            <p>
+                Enter the customer details to predict the purchase decision
+            </p>
+
+            <div class="title-line"></div>
+
+        </div>
+
+
+        <form action="/pred" method="POST">
+
+            <!-- Gender -->
+            <div class="input-group">
+
+                <label for="Gender">
+                    👤 Gender
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">⚥</span>
+
+                    <select name="Gender" id="Gender" required>
+
+                        <option value="" disabled selected>
+                            Select gender
+                        </option>
+
+                        <option value="0">
+                            Male
+                        </option>
+
+                        <option value="1">
+                            Female
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Age -->
+            <div class="input-group">
+
+                <label for="Age">
+                    🎂 Age
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">👤</span>
+
+                    <input
+                        type="number"
+                        name="Age"
+                        id="Age"
+                        placeholder="Enter customer age"
+                        min="18"
+                        max="100"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Annual Salary -->
+            <div class="input-group">
+
+                <label for="AnnualSalary">
+                    💰 Annual Salary
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">$</span>
+
+                    <input
+                        type="number"
+                        name="AnnualSalary"
+                        id="AnnualSalary"
+                        placeholder="Enter annual salary"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Submit -->
+            <button type="submit" class="predict-btn">
+                🚗 &nbsp; PREDICT CAR PURCHASE
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULT -->
+    {% if prediction %}
+
+    <div class="result-card">
+
+        <div class="result-heading">
+            🏁 Prediction Result
+        </div>
+
+        <div class="result-value">
+            {{ prediction }}
+        </div>
+
+        <div class="result-message">
+            Machine learning model prediction based on customer information
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- FEATURES -->
+    <div class="features">
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ⚡
+            </div>
+
+            <h3>Fast Prediction</h3>
+
+            <p>
+                Get your prediction instantly
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎯
+            </div>
+
+            <h3>Smart Model</h3>
+
+            <p>
+                Powered by machine learning
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🚘
+            </div>
+
+            <h3>Car Decision</h3>
+
+            <p>
+                Predict purchase behaviour
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h3>Data Driven</h3>
+
+            <p>
+                Insights from customer data
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        Built with ❤️ using
+        <span>Flask</span> &
+        <span>Machine Learning</span>
+
+        <br><br>
+
+        Drive Smart. &nbsp; Decide Better. 🏁
+
+    </footer>
+
+</div>
+
+<div class="racing-stripes"></div>
+
+</body>
+</html>
+```
