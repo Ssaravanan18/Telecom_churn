@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Breast Cancer Prediction</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #e8eef5);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #263238;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #263238;
+        }
+
+        .header p {
+            color: #607d8b;
+            font-size: 16px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eeeeee;
+            color: #37474f;
+        }
+
+        .section-title span {
+            font-size: 14px;
+            font-weight: normal;
+            color: #78909c;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: #455a64;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cfd8dc;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #546e7a;
+            box-shadow: 0 0 0 3px rgba(84, 110, 122, 0.12);
+        }
+
+        input::placeholder {
+            color: #b0bec5;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .predict-btn {
+            border: none;
+            background: #37474f;
+            color: white;
+            padding: 15px 55px;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .predict-btn:hover {
+            background: #263238;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+            background: #f1f8e9;
+            border: 1px solid #c5e1a5;
+        }
+
+        .result h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #33691e;
+        }
+
+        .result p {
+            font-size: 26px;
+            font-weight: bold;
+            color: #558b2f;
+        }
+
+        .info {
+            margin-top: 25px;
+            text-align: center;
+            color: #78909c;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Breast Cancer Prediction</h1>
+            <p>Enter the patient's cell measurements to predict the result</p>
+        </div>
+
+
+        <div class="card">
+
+            <form action="/predict" method="POST">
+
+
+                <!-- ================= MEAN FEATURES ================= -->
+
+                <div class="section">
+
+                    <div class="section-title">
+                        Mean Features
+                        <span> — Average measurements</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Mean Radius</label>
+                            <input type="number" step="any" name="mean_radius" placeholder="Example: 17.99" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Texture</label>
+                            <input type="number" step="any" name="mean_texture" placeholder="Example: 10.38" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Perimeter</label>
+                            <input type="number" step="any" name="mean_perimeter" placeholder="Example: 122.80"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Area</label>
+                            <input type="number" step="any" name="mean_area" placeholder="Example: 1001.0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Smoothness</label>
+                            <input type="number" step="any" name="mean_smoothness" placeholder="Example: 0.1184"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Compactness</label>
+                            <input type="number" step="any" name="mean_compactness" placeholder="Example: 0.2776"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Concavity</label>
+                            <input type="number" step="any" name="mean_concavity" placeholder="Example: 0.3001"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Concave Points</label>
+                            <input type="number" step="any" name="mean_concave_points" placeholder="Example: 0.1471"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Symmetry</label>
+                            <input type="number" step="any" name="mean_symmetry" placeholder="Example: 0.2419" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mean Fractal Dimension</label>
+                            <input type="number" step="any" name="mean_fractal_dimension" placeholder="Example: 0.07871"
+                                required>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- ================= ERROR FEATURES ================= -->
+
+                <div class="section">
+
+                    <div class="section-title">
+                        Error Features
+                        <span> — Measurement errors</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Radius Error</label>
+                            <input type="number" step="any" name="radius_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Texture Error</label>
+                            <input type="number" step="any" name="texture_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Perimeter Error</label>
+                            <input type="number" step="any" name="perimeter_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Area Error</label>
+                            <input type="number" step="any" name="area_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Smoothness Error</label>
+                            <input type="number" step="any" name="smoothness_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Compactness Error</label>
+                            <input type="number" step="any" name="compactness_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Concavity Error</label>
+                            <input type="number" step="any" name="concavity_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Concave Points Error</label>
+                            <input type="number" step="any" name="concave_points_error" placeholder="Enter value"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Symmetry Error</label>
+                            <input type="number" step="any" name="symmetry_error" placeholder="Enter value" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fractal Dimension Error</label>
+                            <input type="number" step="any" name="fractal_dimension_error" placeholder="Enter value"
+                                required>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- ================= WORST FEATURES ================= -->
+
+                <div class="section">
+
+                    <div class="section-title">
+                        Worst Features
+                        <span> — Largest/worst measurements</span>
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Worst Radius</label>
+                            <input type="number" step="any" name="worst_radius" placeholder="Example: 25.38" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Texture</label>
+                            <input type="number" step="any" name="worst_texture" placeholder="Example: 17.33" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Perimeter</label>
+                            <input type="number" step="any" name="worst_perimeter" placeholder="Example: 184.60"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Area</label>
+                            <input type="number" step="any" name="worst_area" placeholder="Example: 2019.0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Smoothness</label>
+                            <input type="number" step="any" name="worst_smoothness" placeholder="Example: 0.1622"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Compactness</label>
+                            <input type="number" step="any" name="worst_compactness" placeholder="Example: 0.6656"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Concavity</label>
+                            <input type="number" step="any" name="worst_concavity" placeholder="Example: 0.7119"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Concave Points</label>
+                            <input type="number" step="any" name="worst_concave_points" placeholder="Example: 0.2654"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Symmetry</label>
+                            <input type="number" step="any" name="worst_symmetry" placeholder="Example: 0.4601"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Worst Fractal Dimension</label>
+                            <input type="number" step="any" name="worst_fractal_dimension" placeholder="Example: 0.1189"
+                                required>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Predict button -->
+
+                <div class="button-container">
+
+                    <button type="submit" class="predict-btn">
+                        Predict Result
+                    </button>
+
+                </div>
+
+
+                <!-- Prediction result -->
+
+                {% if prediction %}
+
+                <div class="result">
+
+                    <h2>Prediction Result</h2>
+
+                    <p>{{ prediction }}</p>
+
+                </div>
+
+                {% endif %}
+
+
+            </form>
+
+            <div class="info">
+                Machine Learning Prediction System
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
